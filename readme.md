@@ -9,7 +9,7 @@ Use ChatGPT in your Discord Server with your friends!
 * Reply to posts to continue a conversation 
 * Chippy will reply in any channel
   * I would suggest making “chippy-text” and “chippy-images” channels and muting them to save your notifications
-* Chippy also works inside threads, which is highly encouraged
+* Chippy also works inside threads, which are highly encouraged to keep things organized
 
 <img src="images/screenshots/chippy1.png" alt="Image description" width="390" height="400">
 
@@ -17,12 +17,13 @@ Chippy also formats code correctly:
 
 <img src="images/screenshots/chippy2.png" alt="Image description" width="400" height="400">
 
-Chippy supports image generation with DALL-E 2. This feature is disabled by default and can quickly become expensive on large servers.
+Chippy supports image generation with DALL-E 2. This feature is disabled by default, as it can quickly become expensive on large servers
 
 <img src="images/screenshots/chippy3.png" alt="Image description" width="360" height="400">
 
 ### Advanced Usage
- * Your first message can start with “you are” to set the context (“system” tag in the API)
+ * Your first message can start with “you are” to set the context
+   * This just exposes the "system" tag in the API, but doesn't seem to work very well.
 
 ### Setup
 * Create a Discord bot
