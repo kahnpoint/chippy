@@ -50,6 +50,7 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
     * ```mkdir images```
   * Open app.py to input your keys and make sure all the settings are what you want
     * ```sudo nano app.py```
+    * Save and exit with ```Ctrl+S``` ```Ctrl+X```
   * Run it in the background with
     * ```nohup python3 app.py &```
     * You can now hit Ctrl+C and continue using the terminal
