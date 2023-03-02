@@ -1,6 +1,8 @@
 
 # Chippy
 
+Use ChatGPT in your Discord Server with your friends!
+
 ### Usage
 
 * Start a new chat with “@Chippy" 
