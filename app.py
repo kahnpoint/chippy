@@ -1,5 +1,6 @@
 # Chippy v1.0
-# By Adam Kahn
+# By Adam 
+# https://github.com/hardchaos/chippy
 # Released under WTFPL
 
 import discord
@@ -7,6 +8,7 @@ import openai
 import requests
 import sqlite3
 import time
+
 
 # ENVIRONMENT SETTINGS 
 
@@ -48,24 +50,29 @@ client = discord.Client(intents = intents)
 # set up openai
 openai.api_key = OPENAI_KEY
 
+
 # CLASSES
 
 # this class represents a database connection
 class Database:
+    # instatiate self and create connection
     def __init__(self, database_name):
         self.database_name = database_name + ".db"
         self.conn = sqlite3.connect(self.database_name)
         self.cursor = self.conn.cursor()
 
+    # close connection
     def close(self):
         self.conn.commit()
         self.conn.close()
 
 # this class holds functions for storing messages in the database
 class SqlUtils:
+    
     def __init__():
         None
-        
+    
+    # create "messages" table    
     async def create_database():
         db = Database(DB_NAME)
         db.cursor.execute("""
@@ -79,12 +86,13 @@ class SqlUtils:
                     """)
         db.close()
 
+    # drop messages table (unused)
     async def drop_table(table_name):
         db = Database(DB_NAME)
         db.cursor.execute(f"""DROP TABLE IF EXISTS {table_name}""")
         db.close()
         
-    
+    # insert a single message into messages
     async def enter_message(message_id, parent_id, role, message):
         db = Database(DB_NAME)
         db.cursor.execute(f"""INSERT OR REPLACE INTO messages 
@@ -93,6 +101,7 @@ class SqlUtils:
                     """)
         db.close()
 
+    # get a single message from messages
     async def get_message(message_id):
         db = Database(DB_NAME)
         db.cursor.execute(f"""
@@ -103,21 +112,35 @@ class SqlUtils:
         db.close()
         return response
 
-        
+    # get a thread of all parents from messages
     async def get_thread(message_id):
-        #print(message_id)
         messages = []
+        
+        # get info for self
         row = await SqlUtils.get_message(message_id)
         messages.append(row)
+        
+        # loop through parents
         while row[1] != None:
             message_id = row[1]
             row = await SqlUtils.get_message(message_id)
             messages.append(row)
+        
+        # return reversed (chronological) string
         return messages[::-1]
+    
 
-# COMPLETION FUNCTIONS
+# COMPLETION FUNCTIONS (OpenAI API interfaces)
 
-# returns text completion
+# returns chat completion (ChatGPT)
+async def chat_completion(messages):
+    response = openai.ChatCompletion.create(model = CHAT_MODEL, 
+                                     messages = messages)
+    #print(messages)
+    #print(response)
+    return response["choices"][0]["message"]["content"]
+
+# returns text completion (old model, deprecated)
 def text_completion(message, max_tokens = 2048):
     response = openai.Completion.create(model = TEXT_MODEL,
                          prompt = message,
@@ -152,13 +175,6 @@ async def get_image(prompt):
     
     return file
 
-# returns chat completion
-async def chat_completion(messages):
-    response = openai.ChatCompletion.create(model = CHAT_MODEL, 
-                                     messages = messages)
-    #print(messages)
-    #print(response)
-    return response["choices"][0]["message"]["content"]
 
 # DISCORD FUNCTIONS
 
@@ -175,6 +191,7 @@ async def message_to_prompt(message):
 
 # get a message's parent from discord 
 async def get_parent_discord(message):
+    # check to see if message has a parent
     if message.reference is not None:
         # Retrieve the parent message using the reference
         parent = await message.channel.fetch_message(message.reference.message_id)
@@ -184,17 +201,18 @@ async def get_parent_discord(message):
 
 # get parents from local sqlite database
 async def get_parents_locally(message):
-    default = [{"role":"system", "content": DEFAULT_CONTEXT}]
     
+    # get thread
     thread = await SqlUtils.get_thread(message.id)
     
     if thread:
+        # format thread as messages for OpenAI
         messages = [{"role": i[2], "content": i[3]} for i in thread]
         return messages
     else:
         return []
     
-# get all the parent messages by recursively calling discord
+# get all the parent messages by recursively calling discord (deprecated)
 async def get_parents_discord(message):
     parents = []
     current_message = message
@@ -213,14 +231,16 @@ async def get_parents_discord(message):
         # prevent getting rate limited
         time.sleep(10/1000)
 
+    # reverse order for the formatter
     parents = parents[::-1]
     parents.append(message)
     return parents
 
-# format the discord messages for ChatGPT API
+# format the discord messages for ChatGPT API (deprecated)
 async def format_parents_discord(messages):
     messages_output = []
     
+    # loop through messages and format for OpenAI API
     for m in messages:
         
         prompt = await message_to_prompt(m)
@@ -232,6 +252,7 @@ async def format_parents_discord(messages):
             
         messages_output.append({"role": role, "content": prompt})
     
+    # check to see if there is a user-set context
     if messages_output[0]["role"].lower() is not "system":
         messages_output = [{"role": "system", "content": DEFAULT_CONTEXT}] + messages_output
 
@@ -255,25 +276,26 @@ async def store_locally(message):
     # save " as "" for storing in Sqlite
     message.content = message.content.replace('"','""')
     
-    prompt = await message_to_prompt(message)
-    # if no parent, set to NULL (Sqlite's version of None)
+    # local variables
     author = message.author
     reference = message.reference
+    prompt = await message_to_prompt(message)
     
+    # if no parent, set to NULL (Sqlite's version of None)
     if reference is None:
         reference = 'NULL'
     else:
         reference = message.reference.message_id
         
-    # if message is context-setting
+    # if message is context-setting set role as "system"
     if prompt.lower().startswith("you are"):
         author = "system"
         
-    # if bot sent message
+    # if bot sent message set role as "assistant"
     elif message.author == client.user:
         author = "assistant"
     
-    # if user sent message
+    # if user sent message set role as "user"
     else:
         author = "user"
     
@@ -285,7 +307,9 @@ async def store_locally(message):
                                     reference, 
                                     author, 
                                     prompt)
-
+    
+    
+# DISCORD BOT FUNCTIONS
 
 # standard discord bot startup function
 @client.event
@@ -295,7 +319,7 @@ async def on_ready():
     # set default context
     await SqlUtils.enter_message(0,'NULL',"system", DEFAULT_CONTEXT)
     
-
+# on message event
 @client.event
 async def on_message(message):
     
@@ -340,11 +364,8 @@ async def on_message(message):
     if message.author == client.user:
         return 
     
-    #print("getting thread")
-    # get message thread
-    #if message.reference is not None:
+    # get thread
     messages = await get_thread(message)
-    #print(messages)
 
     # if first message is a context message, reply to the thread
     if messages[0]["role"] == "system":
@@ -354,7 +375,6 @@ async def on_message(message):
         # reply to the thread
         await message.reply(response)
 
-    #print("done")
     return
 
 # run discord client    
