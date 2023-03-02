@@ -8,8 +8,8 @@ Use ChatGPT in your Discord Server with your friends!
 * Start a new chat with “@Chippy" 
 * Reply to posts to continue a conversation 
 * Chippy will reply in any channel
-  * I would suggest making “chippy-text” and “chippy-images” channels and muting them to save your notifications
-* Chippy also works inside threads, which are highly encouraged to keep things organized
+  * I would suggest making “chippy-text” and “chippy-images” channels and muting them to save your notifications from being spammed.
+* Chippy also works inside threads, which are highly encouraged to keep things organized.
 
 <img src="images/screenshots/chippy1.png" alt="Image description" width="290" height="300">
 
@@ -17,12 +17,12 @@ Chippy also formats code correctly:
 
 <img src="images/screenshots/chippy2.png" alt="Image description" width="300" height="300">
 
-Chippy supports image generation with DALL-E 2. This feature is disabled by default, as it can quickly become expensive on large servers
+Chippy supports image generation with DALL-E 2. This feature is disabled by default, as it can quickly become expensive on large servers.
 
 <img src="images/screenshots/chippy3.png" alt="Image description" width="270" height="300">
 
 ### Advanced Usage
- * Your first message can start with “you are” to set the context
+ * Your first message can start with “you are” to set the context.
    * This just exposes the "system" tag in the API, but doesn't seem to work very well.
 
 ### Setup
@@ -47,7 +47,7 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
     * ```mkdir chippy```
     * ```cd chippy```
   * Put the app.py file from this repository into the folder
-  * Create a folder called images, which is where generated images will be saved, if enabled
+  * Create a folder called images, which is where generated images will be saved
     * ```mkdir images```
   * Open app.py to input your keys and make sure all the settings are what you want
     * ```sudo nano app.py```
