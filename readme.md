@@ -30,6 +30,7 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
   * Be sure to enable the Message Content Intent on the Bot tab 
   * When creating the join link, be sure to give it adequate text permissions 
   * The icon I used is in the repository as ```images/chippy-logo.png```
+  * After Chippy joins, change its role to @RoleChippy to prevent people from calling the role instead of the bot
 * Create an OpenAI API Key
   * https://elephas.app/blog/how-to-create-openai-api-keys-cl5c4f21d281431po7k8fgyol0
 * Get a server
