@@ -23,7 +23,16 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
 
 ### Advanced Usage
  * Your first message can start with “you are” to set the context.
+   * The default is "You are a helpful assistant."
    * This just exposes the "system" tag in the API, but doesn't seem to work very well.
+   * Chippy won't respond to the context-setting message, so you will need to reply to it with the actual message you want answered.
+  
+
+<img src="images/screenshots/chippy4.png" alt="Image description" width="300" height="200">
+
+### Privacy and Security
+ * Your Chippy will store a stripped-down verison of messages in a local Sqlite database. Ony message text and whether Chippy or a user sent it are stored. This is important because recursively calling the Discord API is slow and will get the bot rate-limited. These messages are not accessable to anybody besides your Chippy.
+ * Be careful to not upload your API keys to anywhere public. If you make modifications to Chippy and upload it to Github, be sure to strip the keys out with "your API key here" or use environment variables.
 
 ### Setup
 * Create a Discord bot
