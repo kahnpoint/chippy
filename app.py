@@ -15,7 +15,7 @@ import time
 BOT_NAME = "Chippy"
 
 # set your discord bot token and openai token
-DISCORD_TOKEN = "your discord api key here"
+DISCORD_TOKEN = "your discord bot token here"
 OPENAI_KEY = "your openai api key here"
 
 # allow image generation
