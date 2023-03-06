@@ -1,5 +1,5 @@
 # Chippy v1.0
-# By Adam 
+# By Adam Kahn
 # https://github.com/hardchaos/chippy
 # Released under WTFPL
 
@@ -15,8 +15,8 @@ import time
 BOT_NAME = "Chippy"
 
 # set your discord bot token and openai token
-DISCORD_TOKEN = "your discord bot token"
-OPENAI_KEY = "your openai api key"
+DISCORD_TOKEN = "your discord api key here"
+OPENAI_KEY = "your openai api key here"
 
 # allow image generation
 ALLOW_IMAGES = False # this can be dangerous to your wallet
@@ -94,6 +94,7 @@ class SqlUtils:
         
     # insert a single message into messages
     async def enter_message(message_id, parent_id, role, message):
+        message = message.replace('"',"'")
         db = Database(DB_NAME)
         db.cursor.execute(f"""INSERT OR REPLACE INTO messages 
                     (message_id, parent_id, role, message)
@@ -136,8 +137,6 @@ class SqlUtils:
 async def chat_completion(messages):
     response = openai.ChatCompletion.create(model = CHAT_MODEL, 
                                      messages = messages)
-    #print(messages)
-    #print(response)
     return response["choices"][0]["message"]["content"]
 
 # returns text completion (old model, deprecated)
@@ -161,8 +160,8 @@ async def get_image(prompt):
     # image prompt
     completion_url = image_completion(prompt)
     
+    # format the filename to be the first 100 characters of the prompt
     filename = "".join([letter for letter in prompt.lower().replace(" ", "_") if letter.isalnum() or letter == '_'])[:100]
-    #print(filename)
     
     # get and save image
     response = requests.get(completion_url)
@@ -274,7 +273,7 @@ async def get_thread(message):
 async def store_locally(message):
     
     # save " as "" for storing in Sqlite
-    message.content = message.content.replace('"','""')
+    message.content = message.content.replace('"',"'")
     
     # local variables
     author = message.author
@@ -300,9 +299,9 @@ async def store_locally(message):
         author = "user"
     
     if DEBUG:
-        None
-        #print(message.id, message.reference, message.author, prompt)
+        print(message.id, message.reference, message.author, prompt)
     
+    # wait for the entry to be entered into sqlite
     await SqlUtils.enter_message(message.id, 
                                     reference, 
                                     author, 
@@ -328,7 +327,7 @@ async def on_message(message):
     
     # test to see if bot is mentioned (for images)
     if client.user in message.mentions:
-        #print(f"{client.user.name} mentioned")
+        
         # see if images are enabled
         if prompt.lower().startswith(IMAGE_PROMPT) and ALLOW_IMAGES:
             # get image
