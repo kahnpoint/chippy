@@ -1,7 +1,7 @@
 # Chippy v1.0
-# By Adam Kahn
+# By hardchaos (Adam Kahn)
 # https://github.com/hardchaos/chippy
-# Released under WTFPL
+# Released under the MIT License
 
 import discord
 import openai

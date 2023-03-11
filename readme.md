@@ -66,4 +66,4 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
     * You can now hit Ctrl+C and continue using the terminal
     * To kill the process run ```ps -ef | grep python``` and ```kill (your process id)```
     
-License: WTFPL
+License: MIT
