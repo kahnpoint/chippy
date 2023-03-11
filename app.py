@@ -8,15 +8,10 @@ import openai
 import requests
 import sqlite3
 import time
-
+import keyway
 
 # ENVIRONMENT SETTINGS 
-
 BOT_NAME = "Chippy"
-
-# set your discord bot token and openai token
-DISCORD_TOKEN = "your discord bot token here"
-OPENAI_KEY = "your openai api key here"
 
 # allow image generation
 ALLOW_IMAGES = False # this can be dangerous to your wallet
@@ -40,6 +35,12 @@ TEXT_MAX_TOKENS = 2048
 
 # enable debugging in server printout
 DEBUG = False
+
+# Keyway setup (for API keys)
+kw = keyway.Keyway()
+DISCORD_TOKEN = kw["DISCORD_TOKEN"]
+OPENAI_KEY = kw["OPENAI_KEY"]
+
 
 # SET UP ENVIRONMENT
 
