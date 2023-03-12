@@ -59,7 +59,7 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
   * Open setup.py to input your keys
     * ```sudo nano setup.py```
     * Enter your keys. 
-      * Keys are stored using Keyway, a library for persistent and encrypted local environment variable storageS.  
+      * Keys are stored using Keyway, a library for persistent and encrypted local environment variable storage.  
     * Save and exit with ```Ctrl+S``` ```Ctrl+X```
     * Run it once with ```python3 setup.py```
     * Optionally delete setup.py if you don't want your keys readable on the server.
