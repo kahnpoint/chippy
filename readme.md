@@ -24,9 +24,8 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
 ### Advanced Usage
  * Your first message can start with “you are” to set the context.
    * The default is "You are a helpful assistant."
-   * This just exposes the "system" tag in the API, but doesn't seem to work very well.
+   * This uses the "system" tag in the API, as opposed to the "user" or "assistant" tags.
    * Chippy won't respond to the context-setting message, so you will need to reply to it with the actual message you want answered.
-  
 
 <img src="images/screenshots/chippy4.png" alt="Image description" width="300" height="200">
 
@@ -37,33 +36,36 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
 ### Setup
 * Create a Discord bot
   * https://www.ionos.com/digitalguide/server/know-how/creating-discord-bot/
-  * Be sure to enable the Message Content Intent on the Bot tab 
-  * When creating the join link, be sure to give it adequate text permissions 
+  * Be sure to enable all Intents on the Bot tab and be sure to give it adequate text permissions when generating the join link.
   * The icon I used is in the repository as ```images/chippy-logo.png```
   * After Chippy joins, change its role to "RoleChippy" to prevent people from calling the role instead of the bot
 * Create an OpenAI API Key
   * https://elephas.app/blog/how-to-create-openai-api-keys-cl5c4f21d281431po7k8fgyol0
 * Get a server
-  * Any virtual machine will work
-  * I have mine running in a Google Cloud compute unit
-  * Digital Ocean is especially easy for beginners 
+  * Any virtual machine will work.
+  * I have mine running on a Google Cloud compute unit, but Digital Ocean is especially easy for beginners.
 * Set up Chippy
   * SSH into the server
-  * Install the python packages
-    * ```pip install openai discord.py requests```
-    * Make sure openai is at least 0.27
-  * Navigate to the folder where you want Chippy to be
-    * ```mkdir chippy```
+  * Navigate to the folder where you want Chippy to be and run
+    * ```git clone https://github.com/hardchaos/chippy```
     * ```cd chippy```
-  * Put the app.py file from this repository into the folder
-  * Create a folder called images, which is where generated images will be saved
-    * ```mkdir images```
-  * Open app.py to input your keys and make sure all the settings are what you want
-    * ```sudo nano app.py```
+  * Install the required python packages
+    * ```pip install -r requirements.txt```
+  * Open setup.py to input your keys
+    * ```sudo nano setup.py```
+    * Enter your keys. 
+      * Keys are stored using Keyway, a library for persistent and encrypted local environment variable storage.
     * Save and exit with ```Ctrl+S``` ```Ctrl+X```
-  * Run it in the background with
+    * Run it once with ```python3 setup.py```
+    * Optionally delete setup.py if you don't want your keys readable on the server.
+  * Look over the default settings in app.py to make sure they are what you want. 
+    * Image generation is disabled by default.
+  * Run the app in the background with
     * ```nohup python3 app.py &```
     * You can now hit Ctrl+C and continue using the terminal
-    * To kill the process run ```ps -ef | grep python``` and ```kill (your process id)```
+    * To kill the process:
+      * Run ```ps -ef | grep python```
+      * Find the app's process id
+      * Kill it with ```kill (your process id)```
     
 License: MIT
