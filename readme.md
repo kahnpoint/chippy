@@ -46,15 +46,20 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
   * I have mine running on a Google Cloud compute unit, but Digital Ocean is especially easy for beginners.
 * Set up Chippy
   * SSH into the server
+  * Install git
+    * ```sudo apt-get install git```
   * Navigate to the folder where you want Chippy to be and run
     * ```git clone https://github.com/hardchaos/chippy```
     * ```cd chippy```
+  * Create your virtual environment and activate it
+    * ```python3 -m venv venv```
+    * ```source venv/bin/activate```
   * Install the required python packages
     * ```pip install -r requirements.txt```
   * Open setup.py to input your keys
     * ```sudo nano setup.py```
     * Enter your keys. 
-      * Keys are stored using Keyway, a library for persistent and encrypted local environment variable storage.
+      * Keys are stored using Keyway, a library for persistent and encrypted local environment variable storage in virtual environements.  
     * Save and exit with ```Ctrl+S``` ```Ctrl+X```
     * Run it once with ```python3 setup.py```
     * Optionally delete setup.py if you don't want your keys readable on the server.
@@ -62,7 +67,8 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
     * Image generation is disabled by default.
   * Run the app in the background with
     * ```nohup python3 app.py &```
-    * You can now hit Ctrl+C and continue using the terminal
+    * You are good to go!
+    * You can now hit Ctrl+C to continue using the terminal.
     * To kill the process:
       * Run ```ps -ef | grep python```
       * Find the app's process id
