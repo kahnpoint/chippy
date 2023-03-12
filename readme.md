@@ -67,5 +67,5 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
       * Run ```ps -ef | grep python```
       * Find the app's process id
       * Kill it with ```kill (your process id)```
-    
+
 License: MIT

@@ -379,3 +379,7 @@ async def on_message(message):
 
 # run discord client    
 client.run(DISCORD_TOKEN)
+
+# TODO (Roadmap)
+#   GPT-4 Support (multimodal features)
+#   Per-server key management
