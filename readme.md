@@ -65,6 +65,8 @@ Chippy supports image generation with DALL-E 2. This feature is disabled by defa
     * Optionally delete setup.py if you don't want your keys readable on the server.
   * Look over the default settings in app.py to make sure they are what you want. 
     * Image generation is disabled by default.
+    * Default model is ```gpt-3.5-turbo```. 
+    * Chippy supports ```gpt-4```, but it is noticably slower and less fun to chat with. The API does not support image uploading, but I plan to add it when it does
   * Run the app in the background with
     * ```nohup python3 app.py &```
     * You are good to go!
