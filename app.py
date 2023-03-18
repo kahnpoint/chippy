@@ -261,7 +261,7 @@ async def format_parents_discord(messages):
         messages_output.append({"role": role, "content": prompt})
     
     # check to see if there is a user-set context
-    if messages_output[0]["role"].lower() is not "system":
+    if messages_output[0]["role"].lower() != "system":
         messages_output = [{"role": "system", "content": DEFAULT_CONTEXT}] + messages_output
 
     if DEBUG:
@@ -386,7 +386,7 @@ async def on_message(message: discord.Message):
         # reply to the thread
         
         # truncate characters over 2000
-        MAX_MESSAGE_LENGTH = 1500
+        MAX_MESSAGE_LENGTH = 1750
         subresponses = [response[i:i+MAX_MESSAGE_LENGTH] for i in range(0, len(response), MAX_MESSAGE_LENGTH)]
 
         for subresponse in subresponses:
