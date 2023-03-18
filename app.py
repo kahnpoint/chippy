@@ -136,9 +136,16 @@ class SqlUtils:
 
 # returns chat completion (ChatGPT)
 async def chat_completion(messages):
-    response = openai.ChatCompletion.create(model = CHAT_MODEL, 
-                                     messages = messages)
-    return response["choices"][0]["message"]["content"]
+    response = None
+    try:
+        response = openai.ChatCompletion.create(model = CHAT_MODEL, 
+                                        messages = messages)
+        return response["choices"][0]["message"]["content"]
+    except Exception as e:
+        if response:
+            return str(e) + str(response)
+        else:
+            return str(e)
 
 # returns text completion (old model, deprecated)
 def text_completion(message, max_tokens = 2048):
@@ -180,6 +187,7 @@ async def get_image(prompt):
 
 # strip @chippy out of the initial message
 async def message_to_prompt(message):
+
     # look for user tag
     if message.content.strip().startswith("<") and ">" in message.content:
         # strip first user out
@@ -321,7 +329,10 @@ async def on_ready():
     
 # on message event
 @client.event
-async def on_message(message):
+async def on_message(message: discord.Message):
+    
+    # print recieved messages
+    print("recieved", message.content)
     
     # get prompt from message
     prompt = await message_to_prompt(message)
@@ -373,7 +384,14 @@ async def on_message(message):
         #response = "test"
         response = await chat_completion(messages)
         # reply to the thread
-        await message.reply(response)
+        
+        # truncate characters over 2000
+        MAX_MESSAGE_LENGTH = 1500
+        subresponses = [response[i:i+MAX_MESSAGE_LENGTH] for i in range(0, len(response), MAX_MESSAGE_LENGTH)]
+
+        for subresponse in subresponses:
+            print("response", subresponse)
+            await message.reply(subresponse)
 
     return
 
