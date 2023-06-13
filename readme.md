@@ -1,6 +1,7 @@
 # Chippy
 
 Use ChatGPT in your Discord Server!
+
 _New: [stability.ai](https://stability.ai) support_
 
 ### Usage
