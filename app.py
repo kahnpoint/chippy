@@ -199,7 +199,7 @@ def generate_stability_image(text_prompt):
         "height": 512,
         "width": 512,
         "samples": 1,
-        "steps": 30,
+        "steps": env["STABILITY_STEPS"],
     }
     if style_preset:
         json["style_preset"] = style_preset
