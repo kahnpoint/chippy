@@ -2,3 +2,5 @@ venv
 demo.ipynb
 chippy.db
 app2.py
+.myenv
+workbooks
