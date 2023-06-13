@@ -18,7 +18,7 @@ Chippy also formats code correctly:
 
 <img src="images/screenshots/chippy2.png" alt="Image description" width="300" height="300">
 
-Chippy supports image generation with DALL-E 2. This feature is disabled by default, as it can quickly become expensive on large servers.
+Chippy supports image generation with DALL-E 2 or Stable Diffusion. This feature is disabled by default, as it can quickly become expensive on large servers. Start your message with "@chippy image of" to generate an image. If using Stable Diffusion, you can also specify a preset, such as "neon punk image of". You can list all available presets with "list presets"
 
 <img src="images/screenshots/chippy3.png" alt="Image description" width="270" height="300">
 
