@@ -1,6 +1,6 @@
 # Chippy
 
-Use ChatGPT in your Discord Server!
+Use ChatGPT in your Discord Server! 
 
 _New: [stability.ai](https://stability.ai) support_
 
@@ -60,14 +60,14 @@ Chippy supports image generation with DALL-E 2 or Stable Diffusion. This feature
     - `source venv/bin/activate`
   - Install the required python packages
     - `pip install -r requirements.txt`
-  - Set your environment variables
-    - `sudo nano .env`
-    - Be sure to change any required settings, such as enabling image generation
-    - Save and exit with `Ctrl+S` `Ctrl+X`
-  - Look over the default settings in app.py to make sure they are what you want.
+  - Rename `.env.example` to `.env`
+    - `cp .env.example .env`
+  - Fill out your environment variables
+    - `nano .env`
     - Image generation is disabled by default.
     - Default model is `gpt-3.5-turbo`.
-    - Chippy supports `gpt-4`, but it is noticably slower and less fun to chat with. The API does not support image uploading, but I plan to add it when it does
+    - Chippy supports `gpt-4`, but it is noticably slower and less fun to chat with. 
+    - Save and exit with `Ctrl+S` `Ctrl+X`
   - Run the app in the background with
     - `nohup python3 app.py &`
     - You are good to go!
@@ -78,4 +78,5 @@ Chippy supports image generation with DALL-E 2 or Stable Diffusion. This feature
       - Kill it with `kill (your process id)`
 
 Not affiliated with OpenAI or Microsoft
+
 License: MIT
