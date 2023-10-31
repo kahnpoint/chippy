@@ -53,7 +53,7 @@ Chippy supports image generation with DALL-E 2 or Stable Diffusion. This feature
   - Install git
     - `sudo apt-get install git`
   - Navigate to the folder where you want Chippy to be and run
-    - `git clone https://github.com/hardchaos/chippy`
+    - `git clone https://github.com/kahnpoint/chippy`
     - `cd chippy`
   - Create your virtual environment and activate it
     - `python3 -m venv venv`
