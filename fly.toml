@@ -1,0 +1,12 @@
+# fly.toml app configuration file generated for chippy-demo on 2023-11-13T16:52:54-08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "chippy-demo"
+primary_region = "sjc"
+
+[mounts]
+  source = "chippy_data"
+  destination = "chippy_data"
+  

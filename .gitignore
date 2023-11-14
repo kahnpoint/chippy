@@ -1,4 +1,7 @@
 venv
+.venv
+.env
+*.db
 demo.ipynb
 chippy.db
 app2.py

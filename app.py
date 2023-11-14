@@ -1,6 +1,6 @@
-# Chippy v1.0
-# By hardchaos (Adam Kahn)
-# https://github.com/hardchaos/chippy
+# Chippy v2.0
+# By kahnpoint (Adam Kahn)
+# https://g%%%ithub.com/kahnpoint/chippy
 # Released under the MIT License
 
 import discord
@@ -12,6 +12,8 @@ import os
 from dotenv import load_dotenv
 import base64
 
+
+mount_point = "./chippy_data"
 
 # load environment variables
 # use development environment if it exists
@@ -57,7 +59,8 @@ STABILITY_STYLE_PRESETS = [
 class Database:
     # instatiate self and create connection
     def __init__(self, database_name):
-        self.database_name = database_name + ".db"
+        os.makedirs(mount_point, exist_ok=True)
+        self.database_name = mount_point + "/" + database_name + ".db"
         self.conn = sqlite3.connect(self.database_name)
         self.cursor = self.conn.cursor()
 
@@ -146,10 +149,10 @@ class SqlUtils:
 async def chat_completion(messages):
     response = None
     try:
-        response = openai.ChatCompletion.create(
+        response = openai.chat.completions.create(
             model=env["CHAT_MODEL"], messages=messages
         )
-        return response["choices"][0]["message"]["content"]
+        return response.choices[0].message.content
     except Exception as e:
         if response:
             return str(e) + str(response)
@@ -263,9 +266,10 @@ async def get_image(prompt):
 
         # get and save image
         response = requests.get(completion_url)
-        output_filename = f"images/{filename}.png"
-        with open(output_filename, "wb") as f:
-            f.write(response.content)
+        output_filename = f"{mount_point}/images/{filename}.png"
+        if env["SAVE_IMAGES"]:
+          with open(output_filename, "wb") as f:
+              f.write(response.content)
 
     with open(output_filename, "rb") as f:
         file = discord.File(f, filename=f"{output_filename}.png")
