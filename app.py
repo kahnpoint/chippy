@@ -168,15 +168,17 @@ def text_completion(message, max_tokens=2048):
     return response["choices"][0]["text"]
 
 
-# openai DALLE2
+# openai DALLE3
 # returns a url of an image
 def image_completion(message, resolution=str(env["IMAGE_SIZE"])):
-    response = openai.Image.create(
+  
+    response = openai.images.generate(
+        model="dall-e-3",
         prompt=message,
         n=1,
         size=f"{resolution}x{resolution}",
     )
-    return response["data"][0]["url"]
+    return response.data[0].url
 
 
 # stabillity ai
@@ -238,7 +240,7 @@ def generate_stability_image(text_prompt):
         ]
     )[:100]
 
-    output_filename = f"./images/{filename}.png"
+    output_filename = f"{mount_point}/images/{filename}.png"
 
     for i, image in enumerate(data["artifacts"]):
         with open(output_filename, "wb") as f:
@@ -249,9 +251,12 @@ def generate_stability_image(text_prompt):
 
 # returns a generated image as a file
 async def get_image(prompt):
-    if env["USE_STABILITY"]:
+    os.makedirs(mount_point + "/images", exist_ok=True)
+    if env["USE_STABILITY"] == "True":
+        print("stability")
         output_filename = generate_stability_image(prompt)
     else:
+        print("openai dalle 3")
         # image prompt
         completion_url = image_completion(prompt)
 
@@ -263,16 +268,18 @@ async def get_image(prompt):
                 if letter.isalnum() or letter == "_"
             ]
         )[:100]
-
+        
         # get and save image
         response = requests.get(completion_url)
         output_filename = f"{mount_point}/images/{filename}.png"
-        if env["SAVE_IMAGES"]:
-          with open(output_filename, "wb") as f:
-              f.write(response.content)
+        with open(output_filename, "wb") as f:
+            f.write(response.content)
 
     with open(output_filename, "rb") as f:
         file = discord.File(f, filename=f"{output_filename}.png")
+        
+    if env["SAVE_IMAGES"] == "False":
+      os.remove(output_filename)
     return file
 
 
@@ -361,7 +368,7 @@ async def format_parents_discord(messages):
             {"role": "system", "content": env["DEFAULT_CONTEXT"]}
         ] + messages_output
 
-    if env["DEBUG"]:
+    if env["DEBUG"] == "True":
         for m in messages_output:
             print(m)
 
@@ -409,7 +416,7 @@ async def store_locally(message):
     else:
         author = "user"
 
-    if env["DEBUG"]:
+    if env["DEBUG"] == "True":
         print(message.id, message.reference, message.author, prompt)
 
     # wait for the entry to be entered into sqlite
@@ -465,7 +472,7 @@ async def on_message(message: discord.Message):
             # send message
             await message.reply(prompt, file=file)
             return
-        if env["STORE_LOCALLY"]:
+        if env["STORE_LOCALLY"] == "True":
             # see if message is setting a context
             if prompt.lower().startswith(env["CONTEXT_PROMPT"]):
                 await SqlUtils.enter_message(message.id, "NULL", "system", prompt)
@@ -480,7 +487,7 @@ async def on_message(message: discord.Message):
     else:
         # print("bot not mentioned")
         # check if local storage is enabled
-        if env["STORE_LOCALLY"]:
+        if env["STORE_LOCALLY"] == "True":
             await store_locally(message)
 
     # break if bot sent message
