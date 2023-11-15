@@ -39,7 +39,7 @@ Chippy supports image generation with DALL-E 2 or Stable Diffusion. This feature
 - Create a [Discord Bot](https://www.ionos.com/digitalguide/server/know-how/creating-discord-bot/)
   - Be sure to enable all Intents on the Bot tab and give it message reading and writing permissions when generating the join link.
   - The icon I used is in the repository as `images/chippy-logo.png`
-  - After Chippy joins, change its role to "RoleChippy" to prevent people from calling the role instead of the bot.
+  - After Chippy joins, change its role from "Chippy" to "RoleChippy" to prevent people from calling the role instead of the bot.
 - Create an [OpenAI API Key](https://elephas.app/blog/how-to-create-openai-api-keys-cl5c4f21d281431po7k8fgyol0)
 - Set up [flyctl](https://fly.io/docs/hands-on/install-flyctl/), the fly.io CLI tool
 - Clone the repo

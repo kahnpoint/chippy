@@ -71,8 +71,6 @@ class Database:
 
 
 # this class holds functions for storing messages in the database
-
-
 class SqlUtils:
     def __init__():
         None
@@ -168,19 +166,6 @@ def text_completion(message, max_tokens=2048):
     return response["choices"][0]["text"]
 
 
-# openai DALLE3
-# returns a url of an image
-def image_completion(message, resolution=str(env["IMAGE_SIZE"])):
-  
-    response = openai.images.generate(
-        model="dall-e-3",
-        prompt=message,
-        n=1,
-        size=f"{resolution}x{resolution}",
-    )
-    return response.data[0].url
-
-
 # stabillity ai
 # returns a filepath of an image
 def generate_stability_image(text_prompt):
@@ -197,19 +182,24 @@ def generate_stability_image(text_prompt):
 
     style_preset, image_prompt = get_image_preset(text_prompt)
     print(style_preset, image_prompt)
+    
+    image_size = 512
+    if int(env["STABILITY_IMAGE_SIZE"]) < 512:
+      image_size = int(env["STABILITY_IMAGE_SIZE"])
+    
     json = {
         "text_prompts": [{"text": image_prompt}],
         "cfg_scale": 7,
         # "clip_guidance_preset": "FAST_BLUE",
-        "height": 512,
-        "width": 512,
+        "height": image_size,
+        "width": image_size,
         "samples": 1,
         "steps": 30,
     }
     if style_preset:
         json["style_preset"] = style_preset
 
-    engine_id = "stable-diffusion-xl-beta-v2-2-2"
+    engine_id = env["STABILITY_MODEL"]
     # engine_id = "stable-diffusion-v1-5"
     api_host = os.getenv("API_HOST", "https://api.stability.ai")
     api_key = env["STABILITY_TOKEN"]
@@ -248,32 +238,50 @@ def generate_stability_image(text_prompt):
 
     return output_filename
 
+# openai DALLE3
+# returns a filepath of an image
+def generate_openai_image(text_prompt):
+  
+    # openai DALLE3
+  # returns a url of an image
+  def image_completion(message, resolution=str(env["OPENAI_IMAGE_SIZE"])):
+    
+      response = openai.images.generate(
+          model=env["OPENAI_MODEL"],
+          prompt=message,
+          n=1,
+          size=f"{resolution}x{resolution}",
+      )
+      return response.data[0].url
+  
+  # image prompt
+  completion_url = image_completion(text_prompt)
+
+  # format the filename to be the first 100 characters of the prompt
+  filename = "".join(
+      [
+          letter
+          for letter in text_prompt.lower().replace(" ", "_")
+          if letter.isalnum() or letter == "_"
+      ]
+  )[:100]
+  
+  # get and save image
+  response = requests.get(completion_url)
+  output_filename = f"{mount_point}/images/{filename}.png"
+  with open(output_filename, "wb") as f:
+      f.write(response.content)
+    
+  return output_filename
+  
 
 # returns a generated image as a file
 async def get_image(prompt):
     os.makedirs(mount_point + "/images", exist_ok=True)
     if env["USE_STABILITY"] == "True":
-        print("stability")
         output_filename = generate_stability_image(prompt)
     else:
-        print("openai dalle 3")
-        # image prompt
-        completion_url = image_completion(prompt)
-
-        # format the filename to be the first 100 characters of the prompt
-        filename = "".join(
-            [
-                letter
-                for letter in prompt.lower().replace(" ", "_")
-                if letter.isalnum() or letter == "_"
-            ]
-        )[:100]
-        
-        # get and save image
-        response = requests.get(completion_url)
-        output_filename = f"{mount_point}/images/{filename}.png"
-        with open(output_filename, "wb") as f:
-            f.write(response.content)
+        output_filename = generate_openai_image(prompt)
 
     with open(output_filename, "rb") as f:
         file = discord.File(f, filename=f"{output_filename}.png")
@@ -284,7 +292,6 @@ async def get_image(prompt):
 
 
 # DISCORD FUNCTIONS
-
 
 # strip @chippy out of the initial message
 async def message_to_prompt(message):
@@ -376,8 +383,6 @@ async def format_parents_discord(messages):
 
 
 # traverse the tree up to the original parent
-
-
 async def get_thread(message):
     if env["STORE_LOCALLY"]:
         return await get_parents_locally(message)
@@ -387,8 +392,6 @@ async def get_thread(message):
 
 
 # store message in local database
-
-
 async def store_locally(message):
     # save " as "" for storing in Sqlite
     message.content = message.content.replace('"', "'")
