@@ -497,6 +497,10 @@ async def on_message(message: discord.Message):
     if message.author == client.user:
         return
 
+	# break if message is setting context
+    if prompt.lower().startswith(env["CONTEXT_PROMPT"]):
+        return
+ 
     # get thread
     messages = await get_thread(message)
 
